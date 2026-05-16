@@ -19,6 +19,45 @@
             background: #ffd6e0;
         }
 
+        /* ── TAP TO START ── */
+        #tapScreen {
+            position: fixed;
+            inset: 0;
+            z-index: 999;
+            background: #1a1a1a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        #tapScreen .tap-emoji {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        #tapScreen .tap-text {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 1.4rem;
+            color: #fff;
+            letter-spacing: 2px;
+        }
+
+        #tapScreen .tap-sub {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-top: 10px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50%       { transform: scale(1.15); }
+        }
+
         /* ── SLIDESHOW ── */
         .slideshow-container { width: 100%; height: 100%; position: relative; }
 
@@ -40,7 +79,6 @@
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* ── SLIDE TEXT ── */
         .slide-text {
             font-family: 'CuteFont', cursive;
             font-size: clamp(1.8rem, 7vw, 3rem);
@@ -64,13 +102,11 @@
             font-size: inherit;
         }
 
-        /* ── COUNTDOWN ── */
         .countdown-text {
             font-family: 'Segoe UI', Arial, sans-serif !important;
             font-size: clamp(5rem, 25vw, 9rem) !important;
             letter-spacing: 4px;
             color: #fff;
-            text-align: center;
             text-shadow:
                 -3px -3px 0 #000,  3px -3px 0 #000,
                 -3px  3px 0 #000,  3px  3px 0 #000;
@@ -86,7 +122,6 @@
             100% { transform: scale(1);   opacity: 1; }
         }
 
-        /* ── LOVE TEXT ── */
         .love-text {
             font-size: clamp(2.5rem, 10vw, 4.5rem) !important;
             transform: scale(0.3);
@@ -151,7 +186,6 @@
             text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
         }
 
-        /* ── BUTTONS ── */
         .buttons { position: relative; width: 100%; height: 70px; }
 
         button {
@@ -205,6 +239,13 @@
     </style>
 </head>
 <body>
+
+    <!-- TAP TO START SCREEN -->
+    <div id="tapScreen">
+        <div class="tap-emoji">💖</div>
+        <div class="tap-text">TAP TO OPEN</div>
+        <div class="tap-sub">with music 🎵</div>
+    </div>
 
     <!-- SLIDESHOW -->
     <div class="slideshow-container" id="slideshow">
@@ -267,7 +308,6 @@
             <h1 class="slide-text">Ready?</h1>
         </div>
 
-        <!-- Countdown 1s each -->
         <div class="slide countdown-slide" data-bg="4" data-duration="1000">
             <h1 class="slide-text countdown-text">3</h1>
         </div>
@@ -278,7 +318,6 @@
             <h1 class="slide-text countdown-text">1</h1>
         </div>
 
-        <!-- I LOVE YOU -->
         <div class="slide love-slide" data-bg="3">
             <h1 class="slide-text love-text">I LOVE YOU <span class="plain">❤️</span></h1>
         </div>
@@ -287,11 +326,9 @@
 
     <!-- PROPOSAL -->
     <div class="proposal-section hidden" id="proposalSection">
-
         <div class="proposal-top">
             <img src="static/chibi.png" alt="chibi" class="proposal-img">
         </div>
-
         <div class="proposal-bottom">
             <h2>Will you be mine? <span style="font-family:sans-serif">💕</span></h2>
             <p id="noResponse"></p>
@@ -300,11 +337,9 @@
                 <button id="noBtn">NO <span style="font-family:sans-serif">😭</span></button>
             </div>
         </div>
-
     </div>
 
     <script>
-        // Background image map
         var bgUrls = {
             "1": "static/bg1.jpg",
             "2": "static/bg2.jpg",
@@ -320,6 +355,27 @@
                 slide.style.backgroundImage = "url('" + bgUrls[bg] + "')";
             }
         });
+
+        // MUSIC
+        var audio = new Audio("static/careless_whisper.mp3");
+        audio.loop = true;
+        audio.volume = 0.7;
+
+        // TAP TO START — required for mobile autoplay
+        var tapScreen = document.getElementById("tapScreen");
+
+        function startExperience() {
+            audio.play().catch(function(){});
+            tapScreen.style.display = "none";
+            current = 0;
+            showSlide(0);
+        }
+
+        tapScreen.addEventListener("click", startExperience);
+        tapScreen.addEventListener("touchstart", function(e) {
+            e.preventDefault();
+            startExperience();
+        }, { passive: false });
 
         // SLIDESHOW
         var current = 0;
@@ -363,8 +419,6 @@
                 }
             }, getDuration(slide));
         }
-
-        showSlide(0);
 
         // BUTTONS
         var yesBtn = document.getElementById("yesBtn");
