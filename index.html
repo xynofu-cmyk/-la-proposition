@@ -483,6 +483,99 @@ document.addEventListener("touchstart", startMusic);
                 '</div>';
         });
     </script>
+    <!-- CHIBI IMAGE -->
+
+
+<!-- BACKGROUND MUSIC -->
+<audio id="bgMusic" loop preload="auto">
+    <source src="static/careless_whisper.mp3" type="audio/mpeg">
+</audio>
+
+<style>
+#chibi{
+    width:220px;
+    max-width:70vw;
+    margin-top:20px;
+    animation: floaty 3s ease-in-out infinite;
+    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.25));
+}
+
+@keyframes floaty{
+    0%{
+        transform: translateY(0px);
+    }
+    50%{
+        transform: translateY(-10px);
+    }
+    100%{
+        transform: translateY(0px);
+    }
+}
+</style>
+
+<script>
+// ================= MUSIC =================
+
+const music = document.getElementById("bgMusic");
+
+function startMusic() {
+
+    music.volume = 0.5;
+
+    const playPromise = music.play();
+
+    if (playPromise !== undefined) {
+        playPromise
+            .then(() => {
+                console.log("Music started");
+            })
+            .catch((err) => {
+                console.log("Autoplay blocked:", err);
+            });
+    }
+
+    // remove listeners after first interaction
+    document.removeEventListener("click", startMusic);
+    document.removeEventListener("touchstart", startMusic);
+}
+
+// Mobile browsers require interaction
+document.addEventListener("click", startMusic);
+document.addEventListener("touchstart", startMusic);
+
+
+// ================= NO BUTTON =================
+
+const noBtn = document.getElementById("noBtn");
+
+if(noBtn){
+
+    noBtn.addEventListener("mouseover", moveButton);
+    noBtn.addEventListener("touchstart", moveButton);
+
+    function moveButton(){
+
+        const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+        const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+
+        const randomX = Math.floor(Math.random() * maxX);
+        const randomY = Math.floor(Math.random() * maxY);
+
+        noBtn.style.position = "fixed";
+        noBtn.style.left = randomX + "px";
+        noBtn.style.top = randomY + "px";
+    }
+}
+
+
+// ================= EXTRA SMOOTHNESS =================
+
+// smooth fade in
+window.addEventListener("load", () => {
+    document.body.style.opacity = "1";
+});
+
+</script>
 
 </body>
 </html>
