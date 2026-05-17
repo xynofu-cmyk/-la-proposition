@@ -239,9 +239,17 @@
     </style>
 </head>
 <body>
-<audio id="bgMusic" loop>
+
+
+    <audio id="bg-music" loop>
     <source src="static/careless_whisper.mp3" type="audio/mpeg">
 </audio>
+
+<script>
+window.addEventListener('click', () => {
+    document.getElementById('bg-music').play();
+}, { once: true });
+</script>
     <!-- TAP TO START SCREEN -->
     <div id="tapScreen">
         <div class="tap-emoji">💖</div>
