@@ -239,7 +239,9 @@
     </style>
 </head>
 <body>
-
+<audio id="bgMusic" loop>
+    <source src="static/careless_whisper.mp3" type="audio/mpeg">
+</audio>
     <!-- TAP TO START SCREEN -->
     <div id="tapScreen">
         <div class="tap-emoji">💖</div>
@@ -340,6 +342,21 @@
     </div>
 
     <script>
+
+        var music = document.getElementById("bgMusic");
+
+function startMusic() {
+    music.play().catch(function(err) {
+        console.log("Autoplay blocked:", err);
+    });
+
+    document.removeEventListener("click", startMusic);
+    document.removeEventListener("touchstart", startMusic);
+}
+
+// Mobile browsers need interaction first
+document.addEventListener("click", startMusic);
+document.addEventListener("touchstart", startMusic);
         var bgUrls = {
             "1": "static/bg1.jpg",
             "2": "static/bg2.jpg",
