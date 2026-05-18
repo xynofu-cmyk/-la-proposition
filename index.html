@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>A Special Question 💖</title>
+
+<style>
+    @font-face {
+        font-family: "CuteFont";
+        src: url("static/cute.ttf") format("truetype");
+    }
+
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+    }
+
+    html,body{
+        width:100%;
+        height:100%;
+        overflow:hidden;
+        background:#ffd6e0;
+        font-family:"CuteFont", cursive;
+    }
+
+    :root{
+        --pink1:#ffd6e0;
+        --pink2:#ffb6c8;
+        --pink3:#ff85a1;
+        --black:#000;
+        --white:#fff;
+    }
+
+    .outline-text{
+        color:#fff;
+        text-shadow:
+            -2px -2px 0 #000,
+             2px -2px 0 #000,
+            -2px  2px 0 #000,
+             2px  2px 0 #000,
+            -3px  0   0 #000,
+             3px  0   0 #000,
+             0   -3px 0 #000,
+             0    3px 0 #000;
+    }
+
+    .plain{
+        font-family:Arial, sans-serif;
+    }
+
+    /* ---------------- TAP SCREEN ---------------- */
+
+    #tapScreen{
+        position:fixed;
+        inset:0;
+        z-index:999;
+        background:#111;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+        cursor:pointer;
+    }
+
+    .tap-emoji{
+        font-size:4rem;
+        margin-bottom:20px;
+        animation:pulse 1.5s infinite;
+    }
+
+    .tap-text{
+        color:#fff;
+        font-size:1.4rem;
+        font-family:Arial, sans-serif;
+        letter-spacing:2px;
+    }
+
+    .tap-sub{
+        color:#aaa;
+        font-size:0.9rem;
+        margin-top:10px;
+        font-family:Arial, sans-serif;
+    }
+
+    @keyframes pulse{
+        0%,100%{transform:scale(1);}
+        50%{transform:scale(1.15);}
+    }
+
+    /* ---------------- SLIDES ---------------- */
+
+    .slideshow-container{
+        width:100%;
+        height:100%;
+        position:relative;
+    }
+
+    .slide{
+        display:none;
+        width:100%;
+        height:100%;
+        justify-content:center;
+        align-items:center;
+        padding:30px 24px;
+        background-size:cover;
+        background-position:center;
+        background-repeat:no-repeat;
+    }
+
+    .slide.active{
+        display:flex;
+        animation:fadeIn .6s ease;
+    }
+
+    @keyframes fadeIn{
+        from{opacity:0;}
+        to{opacity:1;}
+    }
+
+    .slide-text{
+        font-size:clamp(1.8rem,7vw,3rem);
+        text-align:center;
+        line-height:1.6;
+        max-width:95vw;
+        letter-spacing:.5px;
+    }
+
+    /* countdown */
+
+    .countdown-text{
+        font-family:Arial,sans-serif !important;
+        font-size:clamp(5rem,25vw,9rem) !important;
+        letter-spacing:4px;
+    }
+
+    .pulse-in{
+        animation:pulseIn .4s ease forwards;
+    }
+
+    @keyframes pulseIn{
+        0%{
+            transform:scale(.4);
+            opacity:0;
+        }
+        70%{
+            transform:scale(1.2);
+            opacity:1;
+        }
+        100%{
+            transform:scale(1);
+            opacity:1;
+        }
+    }
+
+    /* love text */
+
+    .love-text{
+        font-size:clamp(2.5rem,10vw,4.5rem)!important;
+        transform:scale(.3);
+        opacity:0;
+    }
+
+    .love-text.zoom-in{
+        animation:zoomLove 1s cubic-bezier(0.22,1,0.36,1) forwards;
+    }
+
+    @keyframes zoomLove{
+        0%{
+            transform:scale(.3);
+            opacity:0;
+        }
+        60%{
+            transform:scale(1.15);
+            opacity:1;
+        }
+        100%{
+            transform:scale(1);
+            opacity:1;
+        }
+    }
+
+    /* ---------------- PROPOSAL ---------------- */
+
+    .proposal-section{
+        width:100%;
+        height:100%;
+        display:flex;
+        flex-direction:column;
+    }
+
+    .hidden{
+        display:none !important;
+    }
+
+    .proposal-top{
+        width:100%;
+        height:50%;
+        background:var(--pink1);
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        overflow:hidden;
+    }
+
+    .proposal-img{
+        width:100%;
+        height:100%;
+        object-fit:contain;
+    }
+
+    .proposal-bottom{
+        width:100%;
+        height:50%;
+        background:var(--pink2);
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+        gap:14px;
+        padding:18px 20px;
+        position:relative;
+    }
+
+    .proposal-bottom h2{
+        font-size:clamp(1.8rem,6vw,2.5rem);
+        text-align:center;
+    }
+
+    #noResponse{
+        min-height:60px;
+        text-align:center;
+        padding:0 10px;
+    }
+
+    .normal-response{
+        font-size:clamp(1rem,4vw,1.4rem);
+        text-shadow:1px 1px 3px rgba(0,0,0,.5);
+    }
+
+    .dramatic-response{
+        font-size:clamp(1.6rem,5vw,2rem);
+        line-height:1.5;
+    }
+
+    /* buttons */
+
+    .buttons{
+        width:100%;
+        height:80px;
+        position:relative;
+    }
+
+    button{
+        position:absolute;
+        top:50%;
+        transform:translateY(-50%);
+        padding:14px 36px;
+        border-radius:50px;
+        border:3px solid #000;
+        box-shadow:4px 4px 0 #000;
+        cursor:pointer;
+        font-size:clamp(.95rem,3.5vw,1.2rem);
+        font-family:"CuteFont", cursive;
+        font-weight:bold;
+        letter-spacing:1px;
+    }
+
+    #yesBtn{
+        left:10%;
+        background:var(--pink3);
+        color:#fff;
+    }
+
+    #noBtn{
+        left:55%;
+        background:#f0f0f0;
+        color:#333;
+    }
+
+    /* ---------------- FINAL YES SCREEN ---------------- */
+
+    .yes-screen{
+        width:100%;
+        height:100%;
+        display:flex;
+        flex-direction:column;
+        background:#ffe4ec;
+        animation:fadeIn .7s ease;
+    }
+
+    .yes-top{
+        width:100%;
+        height:50%;
+        background:#ffd6e0;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        overflow:hidden;
+    }
+
+    .yes-top img{
+        width:100%;
+        height:100%;
+        object-fit:contain;
+    }
+
+    .yes-bottom{
+        width:100%;
+        height:50%;
+        background:#ffb6c8;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+        text-align:center;
+        padding:30px 24px;
+    }
+
+    .yes-bottom h1{
+        font-size:clamp(2.5rem,10vw,4rem);
+        margin-bottom:22px;
+    }
+
+    .yes-bottom p{
+        font-size:clamp(1rem,4vw,1.4rem);
+        line-height:1.7;
+        color:#fff;
+        text-shadow:
+            -1px -1px 0 #000,
+             1px -1px 0 #000,
+            -1px  1px 0 #000,
+             1px  1px 0 #000;
+    }
+
+</style>
+</head>
+
+<body>
+
+<!-- MUSIC -->
+<audio id="bgMusic" loop>
+    <source src="static/careless_whisper.mp3" type="audio/mpeg">
+</audio>
+
+<!-- TAP SCREEN -->
+
+<div id="tapScreen">
+    <div class="tap-emoji">💖</div>
+    <div class="tap-text">TAP TO OPEN</div>
+    <div class="tap-sub">with music 🎵</div>
+</div>
+
+<!-- SLIDES -->
+
+<div class="slideshow-container" id="slideshow">
+
+    <div class="slide active" data-bg="1">
+        <h1 class="slide-text outline-text">
+            Miss Neha Bhadoriya <span class="plain">💖</span>
+        </h1>
+    </div>
+
+    <div class="slide" data-bg="2">
+        <h1 class="slide-text outline-text">
+            Warning: this page contains<br>
+            dangerous levels of feelings
+            <span class="plain">😭</span>
+        </h1>
+    </div>
+
+    <div class="slide" data-bg="3">
+        <h1 class="slide-text outline-text">
+            Before we continue...<br>
+            I need to confess something
+            <span class="plain">👀</span>
+        </h1>
+    </div>
+
+    <div class="slide" data-bg="4">
+        <h1 class="slide-text outline-text">
+            I remember a weirdly<br>
+            specific moment...
+        </h1>
+    </div>
+
+    <div class="slide" data-bg="1">
+        <h1 class="slide-text outline-text">
+            <span class="plain">31 August 2023 • 2:45 PM ⏰</span>
+        </h1>
+    </div>
+
+    <div class="slide" data-bg="2">
+        <h1 class="slide-text outline-text">
+            Yep... I actually remember<br>
+            the exact time I first saw you
+            <span class="plain">😭</span>
+        </h1>
+    </div>
+
+    <div class="slide" data-bg="3">
+        <h1 class="slide-text outline-text">
+            Normal people probably<br>
+            don't remember things like this...
+        </h1>
+    </div>
+
+    <div class="slide" data-bg="4">
+        <h1 class="slide-text outline-text">
+            So yes... maybe I was<br>
+            already in trouble
+            <span class="plain">😂</span>
+        </h1>
+    </div>
+
+    <div class="slide" data-bg="1">
+        <h1 class="slide-text outline-text">
+            At first, I thought you were<br>
+            just another person...
+        </h1>
+    </div>
+
+    <div class="slide" data-bg="2">
+        <h1 class="slide-text outline-text">
+            But somehow you became<br>
+            my favorite notification
+            <span class="plain">📱❤️</span>
+        </h1>
+    </div>
+
+    <div class="slide" data-bg="3">
+        <h1 class="slide-text outline-text">
+            My mood randomly gets better<br>
+            when your message pops up
+            <span class="plain">✨</span>
+        </h1>
+    </div>
+
+    <div class="slide" data-bg="4">
+        <h1 class="slide-text outline-text">
+            You slowly became part<br>
+            of my daily happiness
+            <span class="plain">🌸</span>
+        </h1>
+    </div>
+
+    <div class="slide" data-bg="1">
+        <h1 class="slide-text outline-text">
+            Which created<br>
+            one tiny problem...
+        </h1>
+    </div>
+
+    <div class="slide" data-bg="2">
+        <h1 class="slide-text outline-text">
+            Okay okay...<br>
+            a VERY big problem
+            <span class="plain">😭</span>
+        </h1>
+    </div>
+
+    <div class="slide" data-bg="3">
+        <h1 class="slide-text outline-text">
+            Because now I keep thinking<br>
+            about you more than I should
+            <span class="plain">😂</span>
+        </h1>
+    </div>
+
+    <div class="slide" data-bg="4">
+        <h1 class="slide-text outline-text">
+            Wait wait wait —<br>
+            don't panic
+            <span class="plain">😭</span>
+        </h1>
+    </div>
+
+    <div class="slide" data-bg="1">
+        <h1 class="slide-text outline-text">
+            Take a deep breath...
+        </h1>
+    </div>
+
+    <div class="slide" data-bg="2">
+        <h1 class="slide-text outline-text">
+            I just need to ask<br>
+            something important
+            <span class="plain">👀✨</span>
+        </h1>
+    </div>
+
+    <div class="slide" data-bg="3">
+        <h1 class="slide-text outline-text">
+            Ready?
+        </h1>
+    </div>
+
+    <!-- countdown -->
+
+    <div class="slide countdown-slide" data-bg="4" data-duration="1000">
+        <h1 class="slide-text countdown-text outline-text">3</h1>
+    </div>
+
+    <div class="slide countdown-slide" data-bg="1" data-duration="1000">
+        <h1 class="slide-text countdown-text outline-text">2</h1>
+    </div>
+
+    <div class="slide countdown-slide" data-bg="2" data-duration="1000">
+        <h1 class="slide-text countdown-text outline-text">1</h1>
+    </div>
+
+    <!-- love -->
+
+    <div class="slide love-slide" data-bg="3">
+        <h1 class="slide-text love-text outline-text">
+            I LOVE YOU <span class="plain">❤️</span>
+        </h1>
+    </div>
+
+</div>
+
+<!-- PROPOSAL -->
+
+<div class="proposal-section hidden" id="proposalSection">
+
+    <div class="proposal-top">
+        <img src="static/chibi.png" class="proposal-img" id="proposalImage">
+    </div>
+
+    <div class="proposal-bottom">
+
+        <h2 class="outline-text">
+            Will you be mine?
+            <span class="plain">💕</span>
+        </h2>
+
+        <p id="noResponse" class="normal-response outline-text"></p>
+
+        <div class="buttons">
+            <button id="yesBtn">
+                YES <span class="plain">💖</span>
+            </button>
+
+            <button id="noBtn">
+                NO <span class="plain">😭</span>
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<!-- FINAL YES SCREEN -->
+
+<div class="yes-screen hidden" id="yesScreen">
+
+    <div class="yes-top">
+        <img src="static/chibi3.png" alt="">
+    </div>
+
+    <div class="yes-bottom">
+
+        <h1 class="outline-text">
+            YAYYYY <span class="plain">💖</span>
+        </h1>
+
+        <p>
+            You just made me the happiest person alive
+            <span class="plain">😭💕</span>
+            <br><br>
+            I promise I'll always treasure this moment
+            forever ✨
+        </p>
+
+    </div>
+
+</div>
+
+<script>
+
+    /* ---------------- BACKGROUNDS ---------------- */
+
+    const bgUrls = {
+        1:"static/bg1.jpg",
+        2:"static/bg2.jpg",
+        3:"static/bg3.jpg",
+        4:"static/bg4.jpg"
+    };
+
+    document.querySelectorAll(".slide").forEach(slide=>{
+        const bg = slide.dataset.bg;
+        slide.style.backgroundImage = `url(${bgUrls[bg]})`;
+    });
+
+    /* ---------------- MUSIC ---------------- */
+
+    const bgMusic = document.getElementById("bgMusic");
+
+    function startMusic(){
+        bgMusic.play().catch(()=>{});
+    }
+
+    /* ---------------- TAP SCREEN ---------------- */
+
+    const tapScreen = document.getElementById("tapScreen");
+
+    tapScreen.addEventListener("click", ()=>{
+
+        tapScreen.style.display = "none";
+
+        startMusic();
+
+        startSlideshow();
+    });
+
+    /* ---------------- SLIDESHOW ---------------- */
+
+    const slides = document.querySelectorAll(".slide");
+
+    let currentSlide = 0;
+
+    function showSlide(index){
+
+        slides.forEach(slide=>{
+            slide.classList.remove("active");
+        });
+
+        slides[index].classList.add("active");
+
+        const countdownText = slides[index].querySelector(".countdown-text");
+
+        if(countdownText){
+            countdownText.classList.remove("pulse-in");
+
+            void countdownText.offsetWidth;
+
+            countdownText.classList.add("pulse-in");
+        }
+
+        const loveText = slides[index].querySelector(".love-text");
+
+        if(loveText){
+            loveText.classList.remove("zoom-in");
+
+            void loveText.offsetWidth;
+
+            loveText.classList.add("zoom-in");
+        }
+    }
+
+    function startSlideshow(){
+
+        function next(){
+
+            showSlide(currentSlide);
+
+            const slide = slides[currentSlide];
+
+            const duration = slide.dataset.duration
+                ? parseInt(slide.dataset.duration)
+                : 2400;
+
+            currentSlide++;
+
+            if(currentSlide < slides.length){
+
+                setTimeout(next, duration);
+
+            }else{
+
+                setTimeout(()=>{
+                    document.getElementById("slideshow").classList.add("hidden");
+                    document.getElementById("proposalSection").classList.remove("hidden");
+                },1800);
+            }
+        }
+
+        next();
+    }
+
+    /* ---------------- PROPOSAL ---------------- */
+
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const noResponse = document.getElementById("noResponse");
+    const proposalImage = document.getElementById("proposalImage");
+
+    let noCount = 0;
+
+    const noTexts = [
+        "please don't say no 😭",
+        "my heart is fighting for survival 💔",
+        "you are legally required to press yes now 😭",
+        "okay this is getting emotionally dangerous 💀",
+        "just press yes alreadyyyy 💕"
+    ];
+
+    noBtn.addEventListener("click", ()=>{
+
+        noCount++;
+
+        /* first no special */
+
+        if(noCount === 1){
+
+            proposalImage.src = "static/chibi2.png";
+
+            noResponse.className = "dramatic-response outline-text";
+
+            noResponse.innerHTML =
+                "WAITTTT 😭<br>please think again";
+
+        }else{
+
+            noResponse.className = "normal-response outline-text";
+
+            noResponse.innerHTML =
+                noTexts[Math.min(noCount-1, noTexts.length-1)];
+        }
+
+        /* move button */
+
+        const maxX = window.innerWidth - noBtn.offsetWidth - 30;
+        const maxY = 60;
+
+        const randomX = Math.random() * maxX;
+        const randomY = Math.random() * maxY;
+
+        noBtn.style.left = `${randomX}px`;
+        noBtn.style.top = `${randomY}px`;
+    });
+
+    /* yes */
+
+    yesBtn.addEventListener("click", ()=>{
+
+        document.getElementById("proposalSection").classList.add("hidden");
+
+        document.getElementById("yesScreen").classList.remove("hidden");
+    });
+
+</script>
+
+</body>
+</html>
