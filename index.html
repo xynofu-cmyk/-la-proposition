@@ -594,6 +594,14 @@
 
     });
 
+    /* ---------------- FORCE NORMAL FONT FOR NUMBERS ---------------- */
+
+    document.querySelectorAll(".plain").forEach(el => {
+
+        el.style.fontFamily = "Arial, sans-serif";
+
+    });
+
     /* ---------------- MUSIC ---------------- */
 
     const bgMusic = document.getElementById("bgMusic");
@@ -671,10 +679,12 @@
 
             const slide = slides[currentSlide];
 
+            /* COUNTDOWN = 1 SECOND */
+
             const duration =
-                slide.dataset.duration
-                    ? parseInt(slide.dataset.duration)
-                    : 2400;
+                slide.classList.contains("countdown-slide")
+                    ? 1000
+                    : 5000;
 
             currentSlide++;
 
@@ -717,10 +727,10 @@
 
     let noCount = 0;
 
-    /* BUTTONS ALWAYS ABOVE EVERYTHING */
+    /* ALWAYS ABOVE */
 
-    noBtn.style.zIndex = "9999999";
-    yesBtn.style.zIndex = "9999998";
+    noBtn.style.zIndex = "99999999";
+    yesBtn.style.zIndex = "99999998";
 
     /* ORIGINAL TEXTS */
 
@@ -736,7 +746,7 @@
 
     ];
 
-    /* NO BUTTON CLICK */
+    /* NO BUTTON */
 
     noBtn.addEventListener("click", () => {
 
@@ -753,7 +763,6 @@
 
             noResponse.innerHTML =
                 "Are you sure? 🥺";
-
         }
 
         /* ---------- SECOND CLICK ---------- */
@@ -780,7 +789,7 @@
 
         /* ---------- FOURTH CLICK ---------- */
 
-        else {
+        else if (noCount === 4) {
 
             noResponse.className =
                 "normal-response outline-text";
@@ -788,55 +797,14 @@
             noResponse.innerHTML =
                 "No option removed 😂";
 
-            /* YES BUTTON GROWS */
-
-            const yesScale =
-                1 + ((noCount - 3) * 0.18);
+            /* YES BUTTON BIG */
 
             yesBtn.style.transform =
-                `translateY(-50%) scale(${yesScale})`;
+                "translateY(-50%) scale(1.5)";
 
-            /* MOVE NO BUTTON */
+            /* REMOVE NO BUTTON */
 
-            const maxX =
-                window.innerWidth
-                - noBtn.offsetWidth
-                - 20;
-
-            const maxY =
-                window.innerHeight
-                - noBtn.offsetHeight
-                - 20;
-
-            const randomX =
-                Math.random() * maxX;
-
-            const randomY =
-                Math.random() * maxY;
-
-            noBtn.style.position = "fixed";
-
-            noBtn.style.left =
-                `${randomX}px`;
-
-            noBtn.style.top =
-                `${randomY}px`;
-
-            noBtn.style.transform = "none";
-
-            /* SHRINK NO BUTTON */
-
-            const shrink =
-                Math.max(
-                    0.35,
-                    1 - ((noCount - 3) * 0.12)
-                );
-
-            noBtn.style.scale = shrink;
-
-            /* ALWAYS ABOVE EVERYTHING */
-
-            noBtn.style.zIndex = "99999999";
+            noBtn.style.display = "none";
         }
 
     });
@@ -853,6 +821,19 @@
             .getElementById("yesScreen")
             .classList.remove("hidden");
 
+        /* FORCE IMAGE */
+
+        document.querySelector(".yes-top").innerHTML = `
+            <img 
+                src="static/chibi3.png"
+                style="
+                    width:100%;
+                    height:100%;
+                    object-fit:contain;
+                "
+            >
+        `;
+
         /* ORIGINAL YAY TEXT */
 
         document.querySelector(".yes-bottom").innerHTML = `
@@ -861,18 +842,29 @@
                 YAYYYYY ❤️
             </h1>
 
-            <p>
-                Since 31 Aug 2023, 2:45 PM…<br>
+            <p class="outline-text">
+
+                Since 
+                <span style="font-family:Arial,sans-serif;">
+                    31 Aug 2023, 2:45 PM
+                </span>
+                …<br>
+
                 my life accidentally started updating itself 😂✨
+
                 <br><br>
+
                 And now you officially unlocked unlimited care,
                 random affection, and future food dates 🍕💕
+
             </p>
 
         `;
     });
 
 </script>
+                
+
 
 
 </body>
