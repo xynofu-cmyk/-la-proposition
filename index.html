@@ -581,36 +581,41 @@
     /* ---------------- BACKGROUNDS ---------------- */
 
     const bgUrls = {
-        1:"static/bg1.jpg",
-        2:"static/bg2.jpg",
-        3:"static/bg3.jpg",
-        4:"static/bg4.jpg"
+        1: "static/bg1.jpg",
+        2: "static/bg2.jpg",
+        3: "static/bg3.jpg",
+        4: "static/bg4.jpg"
     };
 
-    document.querySelectorAll(".slide").forEach(slide=>{
-        const bg = slide.dataset.bg;
-        slide.style.backgroundImage = `url(${bgUrls[slide.dataset.bg]})`;
+    document.querySelectorAll(".slide").forEach(slide => {
+
+        slide.style.backgroundImage =
+            `url(${bgUrls[slide.dataset.bg]})`;
+
     });
 
     /* ---------------- MUSIC ---------------- */
 
     const bgMusic = document.getElementById("bgMusic");
 
-    function startMusic(){
-        bgMusic.play().catch(()=>{});
+    function startMusic() {
+
+        bgMusic.play().catch(() => {});
+
     }
 
     /* ---------------- TAP SCREEN ---------------- */
 
     const tapScreen = document.getElementById("tapScreen");
 
-    tapScreen.addEventListener("click", ()=>{
+    tapScreen.addEventListener("click", () => {
 
         tapScreen.style.display = "none";
 
         startMusic();
 
         startSlideshow();
+
     });
 
     /* ---------------- SLIDESHOW ---------------- */
@@ -619,17 +624,22 @@
 
     let currentSlide = 0;
 
-    function showSlide(index){
+    function showSlide(index) {
 
-        slides.forEach(slide=>{
+        slides.forEach(slide => {
+
             slide.classList.remove("active");
+
         });
 
         slides[index].classList.add("active");
 
-        const countdownText = slides[index].querySelector(".countdown-text");
+        /* COUNTDOWN ANIMATION */
 
-        if(countdownText){
+        const countdownText =
+            slides[index].querySelector(".countdown-text");
+
+        if (countdownText) {
 
             countdownText.classList.remove("pulse-in");
 
@@ -638,9 +648,12 @@
             countdownText.classList.add("pulse-in");
         }
 
-        const loveText = slides[index].querySelector(".love-text");
+        /* LOVE ANIMATION */
 
-        if(loveText){
+        const loveText =
+            slides[index].querySelector(".love-text");
+
+        if (loveText) {
 
             loveText.classList.remove("zoom-in");
 
@@ -650,33 +663,38 @@
         }
     }
 
-    function startSlideshow(){
+    function startSlideshow() {
 
-        function next(){
+        function next() {
 
             showSlide(currentSlide);
 
             const slide = slides[currentSlide];
 
-            const duration = slide.dataset.duration
-                ? parseInt(slide.dataset.duration)
-                : 2400;
+            const duration =
+                slide.dataset.duration
+                    ? parseInt(slide.dataset.duration)
+                    : 2400;
 
             currentSlide++;
 
-            if(currentSlide < slides.length){
+            if (currentSlide < slides.length) {
 
                 setTimeout(next, duration);
 
-            }else{
+            } else {
 
-                setTimeout(()=>{
+                setTimeout(() => {
 
-                    document.getElementById("slideshow").classList.add("hidden");
+                    document
+                        .getElementById("slideshow")
+                        .classList.add("hidden");
 
-                    document.getElementById("proposalSection").classList.remove("hidden");
+                    document
+                        .getElementById("proposalSection")
+                        .classList.remove("hidden");
 
-                },1800);
+                }, 1800);
             }
         }
 
@@ -685,80 +703,177 @@
 
     /* ---------------- PROPOSAL ---------------- */
 
-    const yesBtn = document.getElementById("yesBtn");
-    const noBtn = document.getElementById("noBtn");
-    const noResponse = document.getElementById("noResponse");
-    const proposalImage = document.getElementById("proposalImage");
+    const yesBtn =
+        document.getElementById("yesBtn");
+
+    const noBtn =
+        document.getElementById("noBtn");
+
+    const noResponse =
+        document.getElementById("noResponse");
+
+    const proposalImage =
+        document.getElementById("proposalImage");
 
     let noCount = 0;
 
+    /* BUTTONS ALWAYS ABOVE EVERYTHING */
+
+    noBtn.style.zIndex = "9999999";
+    yesBtn.style.zIndex = "9999998";
+
+    /* ORIGINAL TEXTS */
+
     const noTexts = [
-        "please don't say no 😭",
-        "my heart is fighting for survival 💔",
-        "you are legally required to press yes now 😭",
-        "okay this is getting emotionally dangerous 💀",
-        "just press yes alreadyyyy 💕"
+
+        "Are you sure? 🥺",
+
+        "Think carefully 😭",
+
+        "I'll be sad...",
+
+        "No option removed 😂"
+
     ];
 
-    noBtn.addEventListener("click", ()=>{
+    /* NO BUTTON CLICK */
+
+    noBtn.addEventListener("click", () => {
 
         noCount++;
 
-        /* ---- FIRST CLICK SPECIAL ---- */
+        /* ---------- FIRST CLICK ---------- */
 
-        if(noCount === 1){
+        if (noCount === 1) {
 
             proposalImage.src = "static/chibi2.png";
 
-            noResponse.className = "dramatic-response outline-text";
+            noResponse.className =
+                "dramatic-response outline-text";
 
             noResponse.innerHTML =
-                "WAITTTT 😭<br>please think again";
+                "Are you sure? 🥺";
 
-            return;
         }
 
-        /* ---- NORMAL TEXTS AFTER ---- */
+        /* ---------- SECOND CLICK ---------- */
 
-        noResponse.className = "normal-response outline-text";
+        else if (noCount === 2) {
 
-        noResponse.innerHTML =
-            noTexts[Math.min(noCount - 2, noTexts.length - 1)];
+            noResponse.className =
+                "normal-response outline-text";
 
-        /* ---- MOVE BUTTON ONLY AFTER 4TH CLICK ---- */
+            noResponse.innerHTML =
+                "Think carefully 😭";
+        }
 
-        if(noCount >= 4){
+        /* ---------- THIRD CLICK ---------- */
+
+        else if (noCount === 3) {
+
+            noResponse.className =
+                "normal-response outline-text";
+
+            noResponse.innerHTML =
+                "I'll be sad...";
+        }
+
+        /* ---------- FOURTH CLICK ---------- */
+
+        else {
+
+            noResponse.className =
+                "normal-response outline-text";
+
+            noResponse.innerHTML =
+                "No option removed 😂";
+
+            /* YES BUTTON GROWS */
+
+            const yesScale =
+                1 + ((noCount - 3) * 0.18);
+
+            yesBtn.style.transform =
+                `translateY(-50%) scale(${yesScale})`;
+
+            /* MOVE NO BUTTON */
 
             const maxX =
-                window.innerWidth - noBtn.offsetWidth - 20;
+                window.innerWidth
+                - noBtn.offsetWidth
+                - 20;
 
             const maxY =
-                window.innerHeight - noBtn.offsetHeight - 20;
+                window.innerHeight
+                - noBtn.offsetHeight
+                - 20;
 
-            const randomX = Math.random() * maxX;
-            const randomY = Math.random() * maxY;
+            const randomX =
+                Math.random() * maxX;
 
-            noBtn.style.left = `${randomX}px`;
-            noBtn.style.top = `${randomY}px`;
+            const randomY =
+                Math.random() * maxY;
+
+            noBtn.style.position = "fixed";
+
+            noBtn.style.left =
+                `${randomX}px`;
+
+            noBtn.style.top =
+                `${randomY}px`;
 
             noBtn.style.transform = "none";
+
+            /* SHRINK NO BUTTON */
+
+            const shrink =
+                Math.max(
+                    0.35,
+                    1 - ((noCount - 3) * 0.12)
+                );
+
+            noBtn.style.scale = shrink;
+
+            /* ALWAYS ABOVE EVERYTHING */
+
+            noBtn.style.zIndex = "99999999";
         }
 
     });
 
     /* ---------------- YES BUTTON ---------------- */
 
-    yesBtn.addEventListener("click", ()=>{
+    yesBtn.addEventListener("click", () => {
 
-        document.getElementById("proposalSection")
+        document
+            .getElementById("proposalSection")
             .classList.add("hidden");
 
-        document.getElementById("yesScreen")
+        document
+            .getElementById("yesScreen")
             .classList.remove("hidden");
 
+        /* ORIGINAL YAY TEXT */
+
+        document.querySelector(".yes-bottom").innerHTML = `
+
+            <h1 class="outline-text">
+                YAYYYYY ❤️
+            </h1>
+
+            <p>
+                Since 31 Aug 2023, 2:45 PM…<br>
+                my life accidentally started updating itself 😂✨
+                <br><br>
+                And now you officially unlocked unlimited care,
+                random affection, and future food dates 🍕💕
+            </p>
+
+        `;
     });
 
 </script>
+
 
 </body>
 </html>
