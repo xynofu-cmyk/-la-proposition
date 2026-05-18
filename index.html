@@ -589,7 +589,7 @@
 
     document.querySelectorAll(".slide").forEach(slide=>{
         const bg = slide.dataset.bg;
-        slide.style.backgroundImage = `url(${bgUrls[bg]})`;
+        slide.style.backgroundImage = `url(${bgUrls[slide.dataset.bg]})`;
     });
 
     /* ---------------- MUSIC ---------------- */
@@ -630,6 +630,7 @@
         const countdownText = slides[index].querySelector(".countdown-text");
 
         if(countdownText){
+
             countdownText.classList.remove("pulse-in");
 
             void countdownText.offsetWidth;
@@ -640,6 +641,7 @@
         const loveText = slides[index].querySelector(".love-text");
 
         if(loveText){
+
             loveText.classList.remove("zoom-in");
 
             void loveText.offsetWidth;
@@ -669,8 +671,11 @@
             }else{
 
                 setTimeout(()=>{
+
                     document.getElementById("slideshow").classList.add("hidden");
+
                     document.getElementById("proposalSection").classList.remove("hidden");
+
                 },1800);
             }
         }
@@ -699,7 +704,7 @@
 
         noCount++;
 
-        /* first no special */
+        /* ---- FIRST CLICK SPECIAL ---- */
 
         if(noCount === 1){
 
@@ -710,33 +715,47 @@
             noResponse.innerHTML =
                 "WAITTTT 😭<br>please think again";
 
-        }else{
-
-            noResponse.className = "normal-response outline-text";
-
-            noResponse.innerHTML =
-                noTexts[Math.min(noCount-1, noTexts.length-1)];
+            return;
         }
 
-        /* move button */
+        /* ---- NORMAL TEXTS AFTER ---- */
 
-        const maxX = window.innerWidth - noBtn.offsetWidth - 30;
-        const maxY = 60;
+        noResponse.className = "normal-response outline-text";
 
-        const randomX = Math.random() * maxX;
-        const randomY = Math.random() * maxY;
+        noResponse.innerHTML =
+            noTexts[Math.min(noCount - 2, noTexts.length - 1)];
 
-        noBtn.style.left = `${randomX}px`;
-        noBtn.style.top = `${randomY}px`;
+        /* ---- MOVE BUTTON ONLY AFTER 4TH CLICK ---- */
+
+        if(noCount >= 4){
+
+            const maxX =
+                window.innerWidth - noBtn.offsetWidth - 20;
+
+            const maxY =
+                window.innerHeight - noBtn.offsetHeight - 20;
+
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+
+            noBtn.style.left = `${randomX}px`;
+            noBtn.style.top = `${randomY}px`;
+
+            noBtn.style.transform = "none";
+        }
+
     });
 
-    /* yes */
+    /* ---------------- YES BUTTON ---------------- */
 
     yesBtn.addEventListener("click", ()=>{
 
-        document.getElementById("proposalSection").classList.add("hidden");
+        document.getElementById("proposalSection")
+            .classList.add("hidden");
 
-        document.getElementById("yesScreen").classList.remove("hidden");
+        document.getElementById("yesScreen")
+            .classList.remove("hidden");
+
     });
 
 </script>
